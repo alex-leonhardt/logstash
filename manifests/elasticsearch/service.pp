@@ -7,7 +7,7 @@ class logstash::elasticsearch::service {
     enable      => true,
     hasrestart  => true,
     hasstatus   => true,
-    require     => Package['/tmp/elasticsearch.rpm'],
+    require     => Package['elasticsearch'],
   }
 
 }

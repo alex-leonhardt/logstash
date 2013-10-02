@@ -7,17 +7,17 @@ class logstash::config {
     ensure  => present,
     home    => "${logstash::basedir}",
   } ->
-  file { '/opt/logstash':
+  file { "${logstash::basedir}":
     ensure  => directory,
     owner   => "${logstash::user}",
     group   => "${logstash::user}",
     mode    => '0644',
   } ->
   exec { 'download_logstash_jar':
-    command   => "/usr/bin/wget ${logstash::jar_download} -O ${logstash::basedir}/logstash-${logstash::jar_version}.jar",
-    creates   => "${logstash::basedir}/logstash-${logstash::jar_version}.jar",
+    command   => "/usr/bin/wget ${logstash::download} -O ${logstash::basedir}/logstash-${logstash::pkg_version}.jar",
+    creates   => "${logstash::basedir}/logstash-${logstash::pkg_version}.jar",
   } ->
-  file { "${logstash::logstash_basdir}/logstash-${logstash::jar_version}.jar":
+  file { "${logstash::basedir}/logstash-${logstash::pkg_version}.jar":
     owner   => 'logstash',
     group   => 'logstash',
     mode    => '0664',
@@ -29,16 +29,14 @@ class logstash::config {
     default   => "${logstash::shipper_conf}"
   }
 
-  # needs removing the file if it isnt set to be a indexer/etc.
-  file { "${logstash::conf_file}":
+  file { "${logstash::basedir}/${logstash::config::conf_file}":
     ensure  => present,
     owner   => 'logstash',
     group   => 'logstash',
     mode    => '0644',
     content => template("${module_name}/${logstash::server_type}.conf.erb"),
-    require => File['/opt/logstash'],
+    require => File["${logstash::basedir}"],
   }
 
 }
-
 
