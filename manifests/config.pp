@@ -30,7 +30,7 @@ class logstash::config {
   }
 
   # needs removing the file if it isnt set to be a indexer/etc.
-  file { "${conf_file}":
+  file { "${logstash::conf_file}":
     ensure  => present,
     owner   => 'logstash',
     group   => 'logstash',
