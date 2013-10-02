@@ -24,7 +24,12 @@ class logstash::redis::install {
     cwd     => "/tmp/redis-${logstash::redis_pkg_version}",
     creates => "${logstash::redis_basedir}/bin/redis-server",
   } ->
-  exec { 'conf_redis':
+  exec { 'conf_redis_1':
+    command => "/bin/sed -i s/^daemonize no$/daemonize yes/ig /tmp/redis-${logstash::redis_pkg_version}/redis.conf",
+    cwd     => "/tmp/redis-${logstash::redis_pkg_version}",
+    unless  => "ls -1 ${logstash::redis_basedir}/redis.conf",
+  }->
+  exec { 'conf_redis_2':
     command => "/bin/mv redis.conf ${logstash::redis_basedir}",
     cwd     => "/tmp/redis-${logstash::redis_pkg_version}",
     creates => "${logstash::redis_basedir}/redis.conf",
