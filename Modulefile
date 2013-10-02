@@ -1,0 +1,8 @@
+name 'alexleonhardt-logstash'
+version '0.0.1'
+author 'Alex Leonhardt'
+summary 'Logstash module'
+description 'A Logstash module to manage and install a "all-in-one" logstash host.'
+license 'Apache v2'
+project_page 'http://www.github.com/'
+dependency 'puppetlabs/stdlib', '>= 4.1.0'
