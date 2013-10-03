@@ -42,6 +42,7 @@ class logstash::config {
     ensure  => present,
     mode    => '0755',
     content => template("${module_name}/logstash.init.erb"),
+    notify  => Service['logstash']
   }
 
 }

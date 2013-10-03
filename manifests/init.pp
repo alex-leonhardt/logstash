@@ -13,9 +13,12 @@ class logstash (
   $indexer_conf       = hiera('logstash::indexer_conf','indexer.conf'),
   $shipper_conf       = hiera('logstash::shipper_conf','shipper.conf'),
   $redis_download     = hiera('logstash::redis_download','http://download.redis.io/releases/redis-2.6.16.tar.gz'),
-  $redis_pkg_version  = hiera('logstash::redis_pkg_version','2.6.16'),
-  $redis_basedir          = hiera('logstash::redis_basedir','/opt/redis'),
-  $elasticsearch_download = hiera('logstash::elasticsearch_download','http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.5.noarch.rpm'),
+  $redis_pkg_version        = hiera('logstash::redis_pkg_version','2.6.16'),
+  $redis_basedir            = hiera('logstash::redis_basedir','/opt/redis'),
+  $redis_server_ip          = hiera('logstash::redis_server_ip', 'localhost'),
+  $redis_server_port        = hiera('logstash::redis_server_port', '6379'),
+  $elasticsearch_download   = hiera('logstash::elasticsearch_download','http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.5.noarch.rpm'),
+  $elasticsearch_server_ip  = hiera('logstash::elasticsearch_server_ip','localhost'),
 ) {
 
 #  notify { "type is ${server_type}": }

@@ -1,0 +1,14 @@
+input {
+  redis {
+    host => "<%= @redis_server_ip %>"
+    data_type => "list"
+    key => "logstash"
+    codec => json
+  }
+}
+
+output {
+  stdout { debug => true debug_format => "json"}
+  elasticsearch { host => "<%= @elasticsearch_server_ip %>" }
+}
+

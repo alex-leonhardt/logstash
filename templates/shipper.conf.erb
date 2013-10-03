@@ -1,0 +1,12 @@
+input {
+  file {
+    type => "syslog"
+    path => ["/var/log/messages","/var/log/secure","/var/log/*.log"]
+  }
+}
+
+output {
+  stdout { codec => rubydebug }
+  redis { host => "<%= @redis_server_ip %>:<%= @redis_server_port %>" data_type => "list" key => "logstash" }
+}
+

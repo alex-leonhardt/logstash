@@ -14,41 +14,52 @@ LOGSTASH_DIR="<%= @basedir %>"
 LOGSTASH_JAR="<%= @basedir %>/logstash-<%= @pkg_version %>.jar"
 LOGSTASH_CONF="<%= @basedir %>/<%= @conf_file %>"
 LOGSTASH_USER="<%= @user %>"
+LOGSTASH_JAVA_ARGS="-Xms<%= @java_maxheap %> -Xmx<%= @java_maxheap %> <%= @java_opts %>"
 
 start() {
   echo -n "Starting Logstash <%= @server_type %>: "
-  su - $LOGSTASH_USER cd <%= @basedir %>
-  [ "$RETVAL" -eq "0" ] && su - $LOGSTASH_USER java -jar logstash-1.2.1-flatjar.jar agent -f $LOGSTASH_CONF >> <%= @basedir %>/startup.log 2>&1 || RETVAL="4"
-  if [ "$RETVAL" -eq "0" ]; then 
-    touch /var/lock/subsys/logstash-<%= @server_type %>
-  else
-    echo "Unable to start logstash. Error code: $RETVAL"
-    return $RETVAL
-  fi
+  daemon --user=$LOGSTASH_USER /usr/bin/java $LOGSTASH_JAVA_ARGS -jar $LOGSTASH_JAR agent -f $LOGSTASH_CONF <% if @server_type == 'indexer' %>-- web<% end %> &> /dev/null &
+  echo $?
 } 
 
 stop() {
-  echo -n "Shutting down Logstash <%= @server_type %>"
-  rm -f /var/lock/subsys/logstash-<%= @server_type %>
-  return 0
+  echo "Shutting down Logstash <%= @server_type %>"
+  PID=`/bin/ps -C java -o pid,cmd | grep logstash.*jar | awk '{ print $1; };'`
+  EXIT_CODE="0"
+  if [ $PID ]; then 
+    kill $PID || EXIT_CODE="1"
+  fi
+  return $EXIT_CODE
+}
+
+status() { 
+  echo -n "Logstash "
+  PID=`/bin/ps -C java -o pid,cmd | grep logstash.*jar | awk '{ print $1; };'`
+  if [ $PID ]; then
+    echo "is running - PID $PID"
+    exit 0
+  else
+    echo "is not running"
+    exit 1
+  fi
 }
 
 case "$1" in
-    start)
-  start
+  start)
+    start
   ;;
-    stop)
-  stop
+  stop)
+    stop
   ;;
-    status)
-  echo "status not yet implemented."
+  status)
+    status
   ;;
-    restart)
-      stop
-  start
+  restart)
+    stop
+    start
   ;;
-    reload)
-  echo "reload not yet implemented"
+  reload)
+    echo "reload not yet implemented"
   ;;
     *)
   echo "Usage: <servicename> {start|stop|status|restart}"
