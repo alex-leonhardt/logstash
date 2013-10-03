@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# /etc/rc.d/init.d/logstash
+#
+# Logstash SysV Init Script
+# 
+# chkconfig: 2345 80 20
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+LOGSTASH_DIR="<%= @basedir %>"
+LOGSTASH_JAR="<%= @basedir %>/logstash-<%= @pkg_version %>.jar"
+LOGSTASH_CONF="<%= @basedir %>/<%= @conf_file %>"
+LOGSTASH_USER="<%= @user %>"
+
+start() {
+  echo -n "Starting Logstash <%= @server_type %>: "
+  su - $LOGSTASH_USER cd <%= @basedir %>
+  [ "$RETVAL" -eq "0" ] && su - $LOGSTASH_USER java -jar logstash-1.2.1-flatjar.jar agent -f $LOGSTASH_CONF >> <%= @basedir %>/startup.log 2>&1 || RETVAL="4"
+  if [ "$RETVAL" -eq "0" ]; then 
+    touch /var/lock/subsys/logstash-<%= @server_type %>
+  else
+    echo "Unable to start logstash. Error code: $RETVAL"
+    return $RETVAL
+  fi
+} 
+
+stop() {
+  echo -n "Shutting down Logstash <%= @server_type %>"
+  rm -f /var/lock/subsys/logstash-<%= @server_type %>
+  return 0
+}
+
+case "$1" in
+    start)
+  start
+  ;;
+    stop)
+  stop
+  ;;
+    status)
+  echo "status not yet implemented."
+  ;;
+    restart)
+      stop
+  start
+  ;;
+    reload)
+  echo "reload not yet implemented"
+  ;;
+    *)
+  echo "Usage: <servicename> {start|stop|status|restart}"
+  exit 1
+  ;;
+esac
+exit $?

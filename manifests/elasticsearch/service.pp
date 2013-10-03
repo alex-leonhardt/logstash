@@ -2,7 +2,7 @@
 
 class logstash::elasticsearch::service {
 
-  service { 'logstash':
+  service { 'elasticsearch':
     ensure      => running,
     enable      => true,
     hasrestart  => true,

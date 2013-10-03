@@ -38,5 +38,11 @@ class logstash::config {
     require => File["${logstash::basedir}"],
   }
 
+  file { '/etc/init.d/logstash':
+    ensure  => present,
+    mode    => '0755',
+    content => template("${module_name}/logstash.init.erb"),
+  }
+
 }
 
