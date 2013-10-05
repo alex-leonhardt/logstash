@@ -9,14 +9,12 @@ class logstash::packages {
 
   $packages = [
                 "${logstash::java_pkg_version}",
-                'wget',
                 'gcc',
                 'make',
+                'wget',
               ]
 
-  package { $packages: ensure => installed  } ->
-  class {'logstash::redis': } ->
-  class {'logstash::elasticsearch': }
+  package { $packages: ensure => installed  }
 
 
 }

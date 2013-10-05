@@ -21,21 +21,16 @@ class logstash (
   $elasticsearch_server_ip  = hiera('logstash::elasticsearch_server_ip','localhost'),
 ) {
 
-#  notify { "type is ${server_type}": }
-
-  stage { 'repos':
+  stage { 'first':
     before => Stage['main'],
   }
-
-  class { 'logstash::repos':
-    stage => 'repos',
-  }
-
-  anchor { 'logstash::begin': } ->
-  class { 'logstash::packages': } ->
-  class { 'logstash::config': } ->
-  class { 'logstash::service': } ->
-  class { 'logstash::monitoring': } ->
+  class { 'logstash::packages': stage => 'first' } ->
+  anchor { 'logstash::begin': }         ->
+  class { 'logstash::redis': }          ->
+  class { 'logstash::elasticsearch': }  ->
+  class { 'logstash::config': }         ->
+  class { 'logstash::service': }        ->
+  class { 'logstash::monitoring': }     ->
   anchor { 'logstash::end': }
 
 }

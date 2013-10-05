@@ -5,6 +5,10 @@ input {
     key => "logstash"
     codec => json
   }
+  file {
+    type => "syslog"
+    path => ["/var/log/messages","/var/log/secure","/var/log/*.log"]
+  }
 }
 
 output {
