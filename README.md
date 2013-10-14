@@ -17,6 +17,9 @@ Puppet Modules:
 
 - [stdlib](https://github.com/puppetlabs/puppetlabs-stdlib) 
 
+General:
+
+- Access to the internet to download redis, elasticsearch, logstash packages/jars
 
 # Usage
     
