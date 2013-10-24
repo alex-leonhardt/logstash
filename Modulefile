@@ -1,5 +1,5 @@
 name 'alexleonhardt-logstash'
-version '0.0.2'
+version '0.0.3'
 author 'Alex Leonhardt'
 summary 'Logstash module'
 description 'A Logstash module to manage and install a "all-in-one" logstash host.'
